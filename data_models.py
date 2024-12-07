@@ -17,6 +17,7 @@ class Author(db.Model):
             books (relationship): Collection of books written by the author.
     """
     __table_name__ = 'authors'
+
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String, nullable=False)
     birth_date = Column(Date, nullable=True)
@@ -48,10 +49,10 @@ class Book(db.Model):
     __table_name__ = 'books'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+    author_id = Column(Integer, ForeignKey('author.id'), nullable=False)
     isbn = Column(Integer, nullable=False, unique=True)
     title = Column(String, nullable=False)
     publication_year = Column(Integer, nullable=True)
-    author_id = Column(Integer, ForeignKey('authors.id'), nullable=False)
 
     author = relationship('Author', backref='books', lazy=True)
 
