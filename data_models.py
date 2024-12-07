@@ -1,13 +1,9 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy import Column, Integer, String, ForeignKey, Date
+from sqlalchemy.orm import relationship
 
 
-class Base(DeclarativeBase):
-    """Base Class for database models."""
-    pass
-
-
-db = SQLAlchemy(model_class=Base)
+db = SQLAlchemy()
 
 
 class Author(db.Model):
@@ -20,23 +16,23 @@ class Author(db.Model):
             death_date (str): Death date of the author (optional).
             books (relationship): Collection of books written by the author.
     """
-    id: db.Mapped[int] = db.mapped_column(primary_key=True, autoincrement=True)
-    name: db.Mapped[str] = db.mapped_column(nullable=False)
-    birth_date: db.Mapped[str] = db.mapped_column(nullable=False)
-    death_date: db.Mapped[str] = db.mapped_column()
-    books = db.relationship('Book', backref='author', lazy=True)
+    __table_name__ = 'authors'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String, nullable=False)
+    birth_date = Column(Date, nullable=True)
+    death_date = Column(Date, nullable=True)
 
     def __repr__(self):
-        """Returns a string representation of the Author model, debugging-friendly"""
-        return f"Author(id={self.id}, name={self.name})"
+        """
+        Returns a string representation of the Author instance for debugging.
+        """
+        return f"Author(id = {self.id}, name = {self.name})"
 
     def __str__(self):
-        """Returns a human-readable string of the Author model"""
-        death = self.death_date if self.death_date else ""
-        if death:
-            return f"{self.id}. {self.name}, ({self.birth_date} - {death})"
-        else:
-            return f"{self.id}. {self.name}, ({self.birth_date})"
+        """
+        Returns a human-readable string representation of the Author instance.
+        """
+        return f"{self.id}. {self.name} ({self.birth_date} - {self.date_of_death})"
 
 
 class Book(db.Model):
@@ -49,24 +45,22 @@ class Book(db.Model):
         publication_year (str): Year of publication of the book (optional).
         isbn (int): ISBN of the book.
     """
-    id: db.Mapped[int] = db.mapped_column(primary_key=True, autoincrement=True)
-    author_id: db.Mapped[int] = db.mapped_column(db.ForeignKey('author.id'))
-    title: db.Mapped[str] = db.mapped_column(nullable=False)
-    publication_year: db.Mapped[str] = db.mapped_column()
-    isbn: db.Mapped[int] = db.mapped_column()
+    __table_name__ = 'books'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    isbn = Column(Integer, nullable=False, unique=True)
+    title = Column(String, nullable=False)
+    publication_year = Column(Integer, nullable=True)
+    author_id = Column(Integer, ForeignKey('authors.id'), nullable=False)
+
+    author = relationship('Author', backref='books', lazy=True)
 
     def __repr__(self):
         """Returns a string representation of the Book model, debugging-friendly"""
-        return f"Book(id={self.id}, title={self.title})"
+        return (f"Book(id = {self.id}, isbn = {self.isbn}, title = {self.title}, "
+                f"publication_year = {self.publication_year}, cover_url = {self.cover_url}, "
+                f"description = {self.description})")
 
     def __str__(self):
         """Returns a human-readable string of the Book model"""
-        pub_year = self.publication_year if self.publication_year else ""
-        if pub_year:
-            return f"{self.id}. {self.title} ({pub_year})"
-        else:
-            return f"{self.id}. {self.title}"
-
-
-
-
+        return f"{self.id}. {self.title} ({self.publication_year})"
