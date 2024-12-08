@@ -41,16 +41,23 @@ def fetch_cover_img(isbn):
     return '/static/default_cover.png'  # Error handling of no img
 
 
-@app.route('/', methods=['GET'])
+@app.route("/", methods=["GET"])
 def home():
-    # Query books and sort by title by default
-    sort_by = request.args.get('sort_by', 'title')
-    if sort_by == 'author':
-        books = Book.query.join(Author).order_by(Author.name).all()
-    else:  # Default sorting by title
-        books = Book.query.order_by(Book.title).all()
+    sort_by = request.args.get("sort_by", "title")  # Default to "title" if not specified
+    keyword = request.args.get("keyword", "")
 
-    return render_template("home.html", books=books, sort_by=sort_by)
+    # Query books and apply sorting
+    query = Book.query
+    if keyword:
+        query = query.filter(Book.title.ilike(f"%{keyword}%"))
+    if sort_by == "author":
+        query = query.join(Author).order_by(Author.name)
+    else:
+        query = query.order_by(Book.title)
+
+    books = query.all()
+
+    return render_template("home.html", books=books, sort_by=sort_by, keyword=keyword)
 
 
 @app.route('/add_author', methods=['GET', 'POST'])

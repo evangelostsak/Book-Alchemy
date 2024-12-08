@@ -9,26 +9,39 @@
 <body>
   <header>
     <h1>My Book Library</h1>
-    <form method="get" action="/">
-      <label for="sort_by">Sort by:</label>
-      <select id="sort_by" name="sort_by" onchange="this.form.submit()">
-        <option value="title" {% if sort_by == 'title' %}selected{% endif %}>Title</option>
-        <option value="author" {% if sort_by == 'author' %}selected{% endif %}>Author</option>
-      </select>
+
+    <!-- Sorting Form -->
+ <form method="get" action="/">
+   <label for="sort_by">Sort by:</label>
+   <select id="sort_by" name="sort_by" onchange="this.form.submit()">
+      <option value="title" {% if sort_by == 'title' %}selected{% endif %}>Title</option>
+      <option value="author" {% if sort_by == 'author' %}selected{% endif %}>Author</option>
+   </select>
+</form>
+
+    <!-- Searching Form -->
+    <form method="GET" action="/" class="search-form">
+      <label for="keyword">Search Books:</label>
+      <input type="text" id="keyword" name="keyword" placeholder="Enter keyword" value="{{ keyword }}">
+      <button type="submit">Search</button>
     </form>
   </header>
 
   <main>
     <section class="book-list">
-      {% for book in books %}
-      <div class="book-card">
-        <img src="{{ book.cover_img_url if book.cover_img_url.startswith('http') else url_for('static', filename=book.cover_img_url) }}"
-            alt="Cover of {{ book.title }}"
-             class="book-cover">
-        <h3>{{ book.title }}</h3>
-        <p><strong>Author:</strong> {{ book.author.name if book.author_id else "Unknown" }}</p>
-      </div>
-      {% endfor %}
+      {% if books %}
+        {% for book in books %}
+        <div class="book-card">
+          <img src="{{ book.cover_img_url if book.cover_img_url.startswith('http') else url_for('static', filename=book.cover_img_url) }}"
+               alt="Cover of {{ book.title }}"
+               class="book-cover">
+          <h3>{{ book.title }}</h3>
+          <p><strong>Author:</strong> {{ book.author.name if book.author_id else "Unknown" }}</p>
+        </div>
+        {% endfor %}
+      {% else %}
+        <p>No books found matching your search criteria.</p>
+      {% endif %}
     </section>
   </main>
 
