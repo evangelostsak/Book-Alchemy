@@ -6,9 +6,37 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
   </head>
   <body>
+  <!-- Success message -->
+  {% if success_msg %}
+    <p class="alert-success">{{ success_msg }}</p>
+  {% endif %}
 
-  <form action="/add_author" method="POST">
-  <!-- Add the form here -->
+  <!-- Failure message -->
+  {% if failure_msg %}
+    <p class="alert-failure">{{ failure_msg }}</p>
+  {% endif %}
+
+  <!-- Add a book code -->
+  <form action="/add_book" method="POST">
+    <label for="title">Book's Title:</label>
+    <input type="text" id="title" name="title" required><br><br>
+
+    <label for="isbn">Book's ISBN:</label>
+    <input type="text" id="isbn" name="isbn" required><br><br>
+
+    <label for="publication_year">Book's Year of release:</label>
+    <input type="text" id="publication_year" name="publication_year"><br><br>
+
+    <!-- Author id dropdown menu -->
+    <label for="author_id">Choose Author:</label>
+    <select id="author_id" name="author_id" required>
+      <option value="" disabled selected>Choose an Author</option>
+      {% for author in authors %}
+          <option value="{{ author.id}}">{{ author.name }}</option>
+      {% endfor %}
+    </select><br><br>
+
+    <input type="submit" value="Add Book">
   </form>
 
   </body>

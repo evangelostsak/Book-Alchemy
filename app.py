@@ -19,6 +19,16 @@ db.init_app(app)
 #    db.create_all()
 
 
+def parse_date(date_str):
+    """
+    Handle dates and return python objects that are usable
+    """
+    try:
+        return datetime.strptime(date_str, "%Y-%m-%d")
+    except (ValueError, TypeError):
+        return None
+
+
 @app.route('/', methods=['GET'])
 def home():
     return render_template("home.html")
@@ -40,8 +50,8 @@ def add_author():
         # creating Author obj
         author = Author(
             name=name,
-            birth_date=birth_date,
-            death_date=death_date
+            birth_date=parse_date(birth_date),
+            death_date=parse_date(death_date)
         )
 
         try:
@@ -55,7 +65,42 @@ def add_author():
             return render_template("add_author.html", failure_msg=failure_msg)
 
     if request.method == 'GET':
-        render_template("add_author.html")
+        return render_template("add_author.html")
+
+
+@app.route('/add_book', methods=['GET', 'POST'])
+def add_book():
+
+    if request.method == 'POST':
+        author_id = request.form.get('author_id')
+        isbn = request.form.get('isbn').strip()
+        title = request.form.get('title').strip()
+        publication_year = request.form.get('publication_year').strip()
+
+        if not title and isbn:
+            warning_msg = "Title and ISBN are required!"
+            return render_template("add_book.html", authors=Author.query.all(),
+                                   warning_msg=warning_msg)
+
+        # Create Book obj
+        book = Book(
+            author_id=author_id,
+            isbn=isbn,
+            title=title,
+            publication_year=publication_year if publication_year else None
+        )
+        try:
+            db.session.add(book)
+            db.session.commit()
+            success_msg = "Book created successfully!"
+            return render_template("add_book.html", authors=Author.query.all(),
+                                   success_msg=success_msg)
+        except SQLAlchemyError as h:
+            db.session.rollback()
+            failure_msg = f"Error creating Book : {h}"
+            return render_template("add_book.html", authors=Author.query.all(),
+                                   failure_msg=failure_msg)
+    return render_template("add_book.html", authors=Author.query.all())
 
 
 if __name__ == "__main__":
