@@ -53,6 +53,7 @@ class Book(db.Model):
     isbn = Column(Integer, nullable=False, unique=True)
     title = Column(String, nullable=False)
     publication_year = Column(Integer, nullable=True)
+    cover_img_url = Column(String, nullable=True)
 
     author = relationship('Author', backref='books', lazy=True)
 

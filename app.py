@@ -29,9 +29,28 @@ def parse_date(date_str):
         return None
 
 
+def fetch_cover_img(isbn):
+    try:
+        url = f"https://www.googleapis.com/books/v1/volumes?q=isbn:{isbn}"
+        response = requests.get(url)
+        data = response.json()
+        if "items" in data:
+            return data['items'][0]['volumeInfo'].get('imageLinks', {}).get('thumbnail', '/static/default_cover.png')
+    except Exception as e:
+        print(f"Error fetching cover image: {e}")
+    return '/static/default_cover.png'  # Error handling of no img
+
+
 @app.route('/', methods=['GET'])
 def home():
-    return render_template("home.html")
+    # Query books and sort by title by default
+    sort_by = request.args.get('sort_by', 'title')
+    if sort_by == 'author':
+        books = Book.query.join(Author).order_by(Author.name).all()
+    else:  # Default sorting by title
+        books = Book.query.order_by(Book.title).all()
+
+    return render_template("home.html", books=books, sort_by=sort_by)
 
 
 @app.route('/add_author', methods=['GET', 'POST'])
@@ -87,7 +106,8 @@ def add_book():
             author_id=author_id,
             isbn=isbn,
             title=title,
-            publication_year=publication_year if publication_year else None
+            publication_year=publication_year if publication_year else None,
+            cover_img_url=fetch_cover_img(isbn)
         )
         try:
             db.session.add(book)

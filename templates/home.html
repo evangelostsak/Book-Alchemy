@@ -1,16 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  </head>
-  <body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home - Book Alchemy</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header>
+    <h1>My Book Library</h1>
+    <form method="get" action="/">
+      <label for="sort_by">Sort by:</label>
+      <select id="sort_by" name="sort_by" onchange="this.form.submit()">
+        <option value="title" {% if sort_by == 'title' %}selected{% endif %}>Title</option>
+        <option value="author" {% if sort_by == 'author' %}selected{% endif %}>Author</option>
+      </select>
+    </form>
+  </header>
 
-    {% for book in books %}
-    <div> <h3>{{ book.title }}</h3>
-    </div>
-    {% endfor %}
+  <main>
+    <section class="book-list">
+      {% for book in books %}
+      <div class="book-card">
+        <img src="{{ book.cover_img_url if book.cover_img_url.startswith('http') else url_for('static', filename=book.cover_img_url) }}"
+            alt="Cover of {{ book.title }}"
+             class="book-cover">
+        <h3>{{ book.title }}</h3>
+        <p><strong>Author:</strong> {{ book.author.name if book.author_id else "Unknown" }}</p>
+      </div>
+      {% endfor %}
+    </section>
+  </main>
 
-  </body>
+  <footer>
+    <p>&copy; 2024 Book Alchemy</p>
+  </footer>
+</body>
 </html>
