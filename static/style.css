@@ -1,0 +1,48 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+}
+
+header {
+  background-color: #0073e6;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+form {
+  margin: 20px auto;
+  text-align: center;
+}
+
+.book-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.book-card {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.book-cover {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+footer {
+  text-align: center;
+  padding: 10px;
+  background-color: #0073e6;
+  color: white;
+  margin-top: 20px;
+}
