@@ -73,3 +73,32 @@ header .search-form button {
 header .search-form button:hover {
   background-color: #005bb5;
 }
+.delete-button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 10px;
+    font-size: 0.9em;
+}
+
+.delete-button:hover {
+    background-color: #c0392b; /* Darker red for hover effect */
+}
+.flash-messages {
+    list-style-type: none;
+    padding: 10px;
+    margin: 0 0 20px;
+}
+
+.flash-messages .success {
+    color: green;
+    font-weight: bold;
+}
+
+.flash-messages .error {
+    color: red;
+    font-weight: bold;
+}

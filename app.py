@@ -2,11 +2,15 @@ import os
 import requests
 from datetime import datetime
 from data_models import db, Author, Book
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, flash
 from requests.exceptions import RequestException
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
+app.secret_key = os.getenv('SECRET_KEY')
 
 # Get the absolute path to the current directory
 base_dir = os.path.abspath(os.path.dirname(__file__))
@@ -128,6 +132,51 @@ def add_book():
             return render_template("add_book.html", authors=Author.query.all(),
                                    failure_msg=failure_msg)
     return render_template("add_book.html", authors=Author.query.all())
+
+
+@app.route('/book/<int:book_id>/delete', methods=['POST'])
+def delete_book(book_id):
+    """
+    Deletes a book by its ID.
+    Also deletes the author if no other books are linked to the author.
+    """
+    try:
+        # Find the book by ID
+        del_book = db.session.query(Book).filter(Book.id == book_id).first()
+        if not del_book:
+            flash(f"Book with ID {book_id} not found!", "error")
+            return redirect(url_for("home"))
+
+        # Store book details for feedback
+        book_title = del_book.title
+        author_id = del_book.author_id
+
+        # Delete the book
+        db.session.delete(del_book)
+        flash(f"Book '{book_title}' has been deleted successfully!", "success")
+
+        # Check if the author has other books and delete the author if no
+        if not db.session.query(Book).filter(Book.author_id == author_id).count():
+            del_author = db.session.query(Author).filter(Author.id == author_id).first()
+            if del_author:
+                db.session.delete(del_author)
+                flash(f"Author '{del_author}' had no books left and alt+F4'ed the database!")
+
+        # Commit the changes
+        db.session.commit()
+        return redirect(url_for("home"))
+
+    except IntegrityError as e:
+        db.session.rollback()
+        flash("Database integrity error occurred during deletion.", "error")
+        print(f"IntegrityError: {e}")
+        return redirect(url_for("home"))
+
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        flash("An unexpected error occurred. Please try again.", "error")
+        print(f"SQLAlchemyError: {e}")
+        return redirect(url_for("home"))
 
 
 if __name__ == "__main__":

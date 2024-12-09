@@ -9,6 +9,15 @@
 <body>
   <header>
     <h1>My Book Library</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flash-messages">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
 
     <!-- Sorting Form -->
  <form method="get" action="/">
@@ -37,6 +46,9 @@
                class="book-cover">
           <h3>{{ book.title }}</h3>
           <p><strong>Author:</strong> {{ book.author.name if book.author_id else "Unknown" }}</p>
+            <form action="{{ url_for('delete_book', book_id=book.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this book?');">
+                <button type="submit" class="delete-button">Delete</button>
+            </form>
         </div>
         {% endfor %}
       {% else %}
