@@ -33,16 +33,28 @@ def parse_date(date_str):
         return None
 
 
+def log(example):
+    """
+    Simple log mechanism to save every action that happens to the site in a txt file
+    """
+    with open('static/log.txt', 'a') as file:
+        file.write(example)
+
+
 def fetch_cover_img(isbn):
     try:
         url = f"https://www.googleapis.com/books/v1/volumes?q=isbn:{isbn}"
         response = requests.get(url)
         data = response.json()
         if "items" in data:
-            return data['items'][0]['volumeInfo'].get('imageLinks', {}).get('thumbnail', '/static/default_cover.png')
+            return data['items'][0]['volumeInfo'].get(
+                'imageLinks', {}).get('thumbnail', '/static/default_cover.png')
     except Exception as e:
         print(f"Error fetching cover image: {e}")
-    return '/static/default_cover.png'  # Error handling of no img
+    except RequestException as h:
+        print(f"Error: {h} ")
+
+    return 'static/default_cover.png'  # Error handling of no img
 
 
 @app.route("/", methods=["GET"])
@@ -88,6 +100,8 @@ def add_author():
             db.session.add(author)
             db.session.commit()
             success_msg = "Author created successfully!"
+            log_msg = f" Author '{author}' created successfully!"
+            log(log_msg)
             return render_template("add_author.html", success_msg=success_msg)
         except SQLAlchemyError as h:
             db.session.rollback()
@@ -124,6 +138,8 @@ def add_book():
             db.session.add(book)
             db.session.commit()
             success_msg = "Book created successfully!"
+            log_msg = f"Book '{book}' created successfully!!"
+            log(log_msg)
             return render_template("add_book.html", authors=Author.query.all(),
                                    success_msg=success_msg)
         except SQLAlchemyError as h:
@@ -150,16 +166,20 @@ def delete_book(book_id):
         # Store book details for feedback
         book_title = del_book.title
         author_id = del_book.author_id
+        log_msg_book = f"Book '{del_book}' has been deleted successfully!"
 
         # Delete the book
         db.session.delete(del_book)
+        log(log_msg_book)
         flash(f"Book '{book_title}' has been deleted successfully!", "success")
 
         # Check if the author has other books and delete the author if no
         if not db.session.query(Book).filter(Book.author_id == author_id).count():
             del_author = db.session.query(Author).filter(Author.id == author_id).first()
+            log_msg_author = f"Author without books '{del_author}' has been deleted successfully!"
             if del_author:
                 db.session.delete(del_author)
+                log(log_msg_author)
                 flash(f"Author '{del_author}' had no books left and alt+F4'ed the database!")
 
         # Commit the changes
