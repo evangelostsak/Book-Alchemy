@@ -51,13 +51,18 @@
       {% if books %}
         {% for book in books %}
         <div class="book-card">
-          <img src="{{ book.cover_img_url if book.cover_img_url.startswith('http') else url_for('static', filename=book.cover_img_url) }}"
+          <img src="{{ book.cover_img_url if book.cover_img_url.startswith('http')
+           else url_for('static', filename=book.cover_img_url) }}"
                alt="Cover of {{ book.title }}"
                class="book-cover">
-          <h3>{{ book.title }}</h3>
+          <h3><a href="{{ url_for('book_details', book_id=book.id) }}">{{ book.title }}</a></h3>
           <p><strong>Author:</strong> {{ book.author.name if book.author_id else "Unknown" }}</p>
-            <form action="{{ url_for('delete_book', book_id=book.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this book?');">
+            <form action="{{ url_for('delete_book', book_id=book.id) }}" method="POST"
+                  onsubmit="return confirm('Are you sure you want to delete this book?');">
                 <button type="submit" class="delete-button">Delete</button>
+            </form>
+            <form action="{{ url_for('delete_author', author_id=book.author.id) }}" method="POST" style="display:inline;">
+            <button type="submit" class="delete-button">Delete Author</button>
             </form>
         </div>
         {% endfor %}

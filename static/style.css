@@ -288,3 +288,120 @@ header .search-form button:hover {
     padding: 8px 16px;
   }
 }
+.author_details {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.author_details h1 {
+    font-size: 2.5em;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.author_details p {
+    font-size: 1.2em;
+    color: #555;
+    margin: 10px 0;
+}
+
+.author_details h2 {
+    font-size: 1.8em;
+    color: #333;
+    margin-top: 40px;
+}
+
+.author_details ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.author_details ul li {
+    margin: 10px 0;
+    font-size: 1.2em;
+}
+
+.author_details ul li a {
+    text-decoration: none;
+    color: #007BFF;
+    transition: color 0.3s;
+}
+
+.author_details ul li a:hover {
+    color: #0056b3;
+}
+.book_details {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.book_details h1 {
+    font-size: 2.5em;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.book_details p {
+    font-size: 1.2em;
+    color: #555;
+    margin: 10px 0;
+}
+
+.book_details p strong {
+    font-weight: bold;
+    color: #333;
+}
+
+.book_details a {
+    color: #007BFF;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.book_details a:hover {
+    color: #0056b3;
+}
+
+.book_details form {
+    margin-top: 30px;
+}
+
+.book_details label {
+    font-size: 1.2em;
+    color: #333;
+    margin-right: 10px;
+}
+
+.book_details input[type="number"] {
+    font-size: 1.2em;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+    width: 60px;
+}
+
+.book_details button {
+    font-size: 1.2em;
+    padding: 5px 15px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.book_details button:hover {
+    background-color: #0056b3;
+}

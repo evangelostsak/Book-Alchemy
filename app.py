@@ -71,7 +71,7 @@ def home():
     else:
         query = query.order_by(Book.title)
 
-    books = query.all()
+    books = query.options(db.joinedload(Book.author)).all()
 
     return render_template("home.html", books=books, sort_by=sort_by, keyword=keyword)
 
@@ -120,6 +120,7 @@ def add_book():
         isbn = request.form.get('isbn').strip()
         title = request.form.get('title').strip()
         publication_year = request.form.get('publication_year').strip()
+        rating = request.form.get('rating').strip()
 
         if not title and isbn:
             warning_msg = "Title and ISBN are required!"
@@ -132,7 +133,8 @@ def add_book():
             isbn=isbn,
             title=title,
             publication_year=publication_year if publication_year else None,
-            cover_img_url=fetch_cover_img(isbn)
+            cover_img_url=fetch_cover_img(isbn),
+            rating=rating
         )
         try:
             db.session.add(book)
@@ -176,9 +178,9 @@ def delete_book(book_id):
         # Check if the author has other books and delete the author if no
         if not db.session.query(Book).filter(Book.author_id == author_id).count():
             del_author = db.session.query(Author).filter(Author.id == author_id).first()
-            log_msg_author = f"Author without books '{del_author}' has been deleted successfully!"
             if del_author:
                 db.session.delete(del_author)
+                log_msg_author = f"Author without books '{del_author}' has been deleted successfully!"
                 log(log_msg_author)
                 flash(f"Author '{del_author}' had no books left and alt+F4'ed the database!")
 
@@ -197,6 +199,55 @@ def delete_book(book_id):
         flash("An unexpected error occurred. Please try again.", "error")
         print(f"SQLAlchemyError: {e}")
         return redirect(url_for("home"))
+
+
+@app.route('/author/<int:author_id>/delete', methods=['POST'])
+def delete_author(author_id):
+    try:
+        author = Author.query.get_or_404(author_id)
+        db.session.delete(author)
+        db.session.commit()
+        log_msg = f"Author '{author}' and their books were deleted successfully!"
+        log(log_msg)
+        flash(f"Author '{author.name}' and their books were deleted successfully!", 'success')
+        return redirect(url_for('home'))
+
+    except IntegrityError as e:
+        db.session.rollback()
+        flash("Database integrity error occurred during deletion.", "error")
+        print(f"IntegrityError: {e}")
+        return redirect(url_for("home"))
+
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        flash("An unexpected error occurred. Please try again.", "error")
+        print(f"SQLAlchemyError: {e}")
+        return redirect(url_for("home"))
+
+
+@app.route('/book/<int:book_id>')
+def book_details(book_id):
+    book = Book.query.get_or_404(book_id)
+    return render_template('book_details.html', book=book)
+
+
+@app.route('/author/<int:author_id>')
+def author_details(author_id):
+    author = Author.query.get_or_404(author_id)
+    return render_template('author_details.html', author=author)
+
+
+@app.route('/book/<int:book_id>/rate', methods=['POST'])
+def rate_book(book_id):
+    book = Book.query.get_or_404(book_id)
+    new_rating = request.form.get('rating', type=int)
+    if 1 <= new_rating <= 10:
+        book.rating = new_rating
+        db.session.commit()
+        flash(f"Updated rating for '{book.title}' to {new_rating}/10!", 'success')
+    else:
+        flash("Rating must be between 1 and 10.", 'error')
+    return redirect(url_for('book_details', book_id=book.id))
 
 
 if __name__ == "__main__":
