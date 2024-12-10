@@ -33,7 +33,7 @@ class Author(db.Model):
         """
         Returns a human-readable string representation of the Author instance.
         """
-        return f"{self.id}. {self.name} ({self.birth_date} - {self.date_of_death})"
+        return f"{self.id}. {self.name} ({self.birth_date} - {self.death_date})"
 
 
 class Book(db.Model):
