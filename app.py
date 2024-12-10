@@ -33,12 +33,12 @@ def parse_date(date_str):
         return None
 
 
-def log(example):
+def log(log_msg):
     """
     Simple log mechanism to save every action that happens to the site in a txt file
     """
     with open('static/log.txt', 'a') as file:
-        file.writelines(example + '\n')
+        file.writelines(log_msg + '\n')
 
 
 def fetch_cover_img(isbn):
