@@ -32,7 +32,7 @@ class Author(db.Model):
 
     def __str__(self):
         """
-        Returns a human-readable string representation of the Author instance.
+        Returns a human-readable string representation of the Author.
         """
         return f"{self.id}. {self.name} ({self.birth_date} - {self.death_date})"
 
@@ -64,5 +64,5 @@ class Book(db.Model):
                 f"rating = {self.rating})")
 
     def __str__(self):
-        """Returns a human-readable string of the Book model"""
+        """Returns a human-readable string of the Book."""
         return f"{self.id}. {self.title} ({self.publication_year})"

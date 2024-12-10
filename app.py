@@ -42,6 +42,9 @@ def log(log_msg):
 
 
 def fetch_cover_img(isbn):
+    """
+    Fetching covers for the books using googles api. ISBN used to get the covers
+    """
     try:
         url = f"https://www.googleapis.com/books/v1/volumes?q=isbn:{isbn}"
         response = requests.get(url)
@@ -59,6 +62,10 @@ def fetch_cover_img(isbn):
 
 @app.route("/", methods=["GET"])
 def home():
+    """
+    Homepage, contains the sorting and search mechanisms
+    :return:
+    """
     sort_by = request.args.get("sort_by", "title")  # Default to "title" if not specified
     keyword = request.args.get("keyword", "")
 
@@ -78,6 +85,11 @@ def home():
 
 @app.route('/add_author', methods=['GET', 'POST'])
 def add_author():
+    """
+    Add author page.
+    GET returns the rendered page
+    POST receives the requests from the user and acts accordingly
+    """
 
     if request.method == 'POST':
         name = request.form.get('name').strip()
@@ -114,6 +126,12 @@ def add_author():
 
 @app.route('/add_book', methods=['GET', 'POST'])
 def add_book():
+    """
+    Add book page.
+    GET returns the rendered page
+    POST receives the requests from the user and acts accordingly
+
+    """
 
     if request.method == 'POST':
         author_id = request.form.get('author_id')
@@ -180,7 +198,7 @@ def delete_book(book_id):
             del_author = db.session.query(Author).filter(Author.id == author_id).first()
             if del_author:
                 db.session.delete(del_author)
-                log_msg_author = f"Author without books '{del_author}' has been deleted successfully!"
+                log_msg_author = f"Author '{del_author}' has been deleted successfully!"
                 log(log_msg_author)
                 flash(f"Author '{del_author}' had no books left and alt+F4'ed the database!")
 
@@ -203,6 +221,9 @@ def delete_book(book_id):
 
 @app.route('/author/<int:author_id>/delete', methods=['POST'])
 def delete_author(author_id):
+    """
+    Deletes author and all its books by author's ID.
+    """
     try:
         author = Author.query.get_or_404(author_id)
         db.session.delete(author)
@@ -227,18 +248,28 @@ def delete_author(author_id):
 
 @app.route('/book/<int:book_id>')
 def book_details(book_id):
+    """
+    Rendering template for the details of a Book.
+    """
     book = Book.query.get_or_404(book_id)
     return render_template('book_details.html', book=book)
 
 
 @app.route('/author/<int:author_id>')
 def author_details(author_id):
+    """
+    Rendering template for the details of an Author.
+    """
     author = Author.query.get_or_404(author_id)
     return render_template('author_details.html', author=author)
 
 
 @app.route('/book/<int:book_id>/rate', methods=['POST'])
 def rate_book(book_id):
+    """
+    Book's rating mechanism. works by book id.
+    User can set rating while creating and book and update it later on demand.
+    """
     book = Book.query.get_or_404(book_id)
     new_rating = request.form.get('rating', type=int)
     if 1 <= new_rating <= 10:
