@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ book.title }} - Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header>
+    <h1>Book Alchemy</h1>
+    <h3>Book Details</h3>
+              <!-- Navigation bar -->
+      <nav>
+      <ul class="navbar">
+        <li><a href="{{ url_for('home') }}">Home</a></li>
+        <li><a href="{{ url_for('add_author') }}">Add Author</a></li>
+        <li><a href="{{ url_for('add_book') }}">Add Book</a></li>
+        </ul>
+          </nav>
+</header>
+<div class="book_details">
+    <h1>{{ book.title }}</h1>
+    <p><strong>ISBN:</strong> {{ book.isbn }}</p>
+    <p><strong>Publication Year:</strong> {{ book.publication_year }}</p>
+    <p><strong>Rating:</strong> {{ book.rating }}/10</p>
+    <p><strong>Author:</strong> <a href="{{ url_for('author_details',
+     author_id=book.author.id) }}">{{ book.author.name }}</a></p>
+
+    <form action="{{ url_for('rate_book', book_id=book.id) }}" method="POST">
+    <label for="rating">New Rating (1-10):</label>
+    <input type="number" id="rating" name="rating" min="1" max="10" required>
+    <button type="submit">Update Rating</button>
+    </form>
+    </div>
+  <footer>
+    <p>&copy; 2024 Book Alchemy</p>
+  </footer>
+
+</body>
+</html>
