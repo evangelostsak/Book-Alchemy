@@ -9,6 +9,7 @@
 <body>
   <header>
     <h1>My Book Library</h1>
+      <h3>Homepage</h3>
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             <ul class="flash-messages">
@@ -18,6 +19,15 @@
             </ul>
         {% endif %}
     {% endwith %}
+
+          <!-- Navigation bar -->
+      <nav>
+      <ul class="navbar">
+        <li><a href="{{ url_for('home') }}">Home</a></li>
+        <li><a href="{{ url_for('add_author') }}">Add Author</a></li>
+        <li><a href="{{ url_for('add_book') }}">Add Book</a></li>
+        </ul>
+          </nav>
 
     <!-- Sorting Form -->
  <form method="get" action="/">

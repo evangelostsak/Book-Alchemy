@@ -4,8 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   </head>
   <body>
+      <header>
+      <h1>Book Alchemy</h1>
+      <h3>Add Book</h3>
+      <!-- Navigation bar -->
+      <nav>
+      <ul class="navbar">
+        <li><a href="{{ url_for('home') }}">Home</a></li>
+        <li><a href="{{ url_for('add_author') }}">Add Author</a></li>
+        <li><a href="{{ url_for('add_book') }}">Add Book</a></li>
+        </ul>
+          </nav>
+    </header>
   <!-- Success message -->
   {% if success_msg %}
     <p class="alert-success">{{ success_msg }}</p>
@@ -17,6 +30,7 @@
   {% endif %}
 
   <!-- Add a book code -->
+      <div class="forms_book">
   <form action="/add_book" method="POST">
     <label for="title">Book's Title:</label>
     <input type="text" id="title" name="title" required><br><br>
@@ -38,6 +52,10 @@
 
     <input type="submit" value="Add Book">
   </form>
+        </div>
+    <footer>
+    <p>&copy; 2024 Book Alchemy</p>
+  </footer>
 
   </body>
 </html>

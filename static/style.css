@@ -63,7 +63,7 @@ header .search-form input {
 
 header .search-form button {
   padding: 8px 12px;
-  background-color: #0073e6;
+  background-color: #28a745;
   color: white;
   border: none;
   border-radius: 4px;
@@ -71,7 +71,7 @@ header .search-form button {
 }
 
 header .search-form button:hover {
-  background-color: #005bb5;
+  background-color: #218838;
 }
 .delete-button {
     background-color: #e74c3c;
@@ -101,4 +101,190 @@ header .search-form button:hover {
 .flash-messages .error {
     color: red;
     font-weight: bold;
+}
+
+/* Navbar styles */
+.navbar {
+  display: flex;
+  list-style-type: none;
+  background-color: #333;
+  padding: 0;
+  margin: 0;
+}
+
+.navbar li {
+  margin: 0;
+  padding: 10px 20px;
+}
+
+.navbar li a {
+  text-decoration: none;
+  color: white;
+}
+
+.navbar li a:hover {
+  text-decoration: underline;
+}
+
+/* Sort and Search Forms */
+.sort-form,
+.search-form {
+  margin-top: 10px;
+}
+
+/* Container for the form authors */
+.forms_author {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Form styling */
+.forms_author form {
+  width: 100%;
+}
+
+/* Labels */
+.forms_author label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Inputs */
+.forms_author input[type="text"],
+.forms_author input[type="date"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+/* Submit button */
+.forms_author input[type="submit"] {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.forms_author input[type="submit"]:hover {
+  background-color: #218838;
+}
+
+/* Success and failure messages */
+.alert-success,
+.alert-failure {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.alert-failure {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+/* Container for the form */
+.forms_book {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Form styling */
+.forms_book form {
+  width: 100%;
+}
+
+/* Labels */
+.forms_book label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Inputs and Select */
+.forms_book input[type="text"],
+.forms_book select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+/* Dropdown (select) styling */
+.forms_book select {
+  background-color: #ffffff;
+  cursor: pointer;
+}
+
+/* Submit button */
+.forms_book input[type="submit"] {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.forms_book input[type="submit"]:hover {
+  background-color: #218838;
+}
+
+/* Responsive design */
+@media (max-width: 500px) {
+  .forms_book {
+    padding: 15px;
+  }
+
+  .forms_book input[type="text"],
+  .forms_book select,
+  .forms_book input[type="submit"] {
+    font-size: 14px;
+  }
+
+  .forms_book input[type="submit"] {
+    padding: 8px 16px;
+  }
 }

@@ -4,11 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <title>Add Author</title>
   </head>
   <body>
-
+    <header>
+      <h1>Book Alchemy</h1>
+      <h3>Add Author</h3>
+      <!-- Navigation bar -->
+      <nav>
+      <ul class="navbar">
+        <li><a href="{{ url_for('home') }}">Home</a></li>
+        <li><a href="{{ url_for('add_author') }}">Add Author</a></li>
+        <li><a href="{{ url_for('add_book') }}">Add Book</a></li>
+        </ul>
+          </nav>
+    </header>
   <!-- Success message -->
   {% if success_msg %}
     <p class="alert-success">{{ success_msg }}</p>
@@ -18,7 +29,7 @@
   {% if failure_msg %}
     <p class="alert-failure">{{ failure_msg }}</p>
   {% endif %}
-
+  <div class="forms_author">
   <form action="/add_author" method="POST">
   <label for="name">Author Name:</label>
   <input type="text" id="name" name="name" required><br><br>
@@ -31,6 +42,10 @@
 
   <input type="submit" value="Add Author">
   </form>
+    </div>
+    <footer>
+    <p>&copy; 2024 Book Alchemy</p>
+  </footer>
 
   </body>
 </html>
