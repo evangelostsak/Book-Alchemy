@@ -38,7 +38,7 @@ def log(example):
     Simple log mechanism to save every action that happens to the site in a txt file
     """
     with open('static/log.txt', 'a') as file:
-        file.write(example)
+        file.writelines(example + '\n')
 
 
 def fetch_cover_img(isbn):
