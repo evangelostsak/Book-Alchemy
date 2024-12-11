@@ -115,7 +115,7 @@ def add_author():
             db.session.add(author)
             db.session.commit()
             success_msg = "Author created successfully!"
-            log_msg = f" Author '{author}' created successfully!"
+            log_msg = f"Author '{author}' created successfully!"
             log(log_msg)
             return render_template("add_author.html", success_msg=success_msg)
         except SQLAlchemyError as h:
