@@ -292,7 +292,7 @@ def suggest_book():
     """
     if request.method == "POST":
         # Retrieve all books from the database
-        books = Book.query.all()
+        books = Book.query.options(db.joinedload(Book.author)).all()
 
         # Optionally, if you implemented ratings, include them:
         books_data = [
