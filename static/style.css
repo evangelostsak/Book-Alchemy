@@ -405,3 +405,38 @@ header .search-form button:hover {
 .book_details button:hover {
     background-color: #0056b3;
 }
+.suggestion-form {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.suggestion-form button {
+    padding: 10px 20px;
+    font-size: 1.2em;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.suggestion-form button:hover {
+    background-color: #0056b3;
+}
+
+.suggestion-result {
+    margin-top: 30px;
+    font-size: 1.3em;
+    text-align: center;
+}
+
+.suggestion-result h2 {
+    font-size: 2em;
+    color: #333;
+}
+
+.suggestion-result p {
+    font-size: 1.2em;
+    color: #555;
+}

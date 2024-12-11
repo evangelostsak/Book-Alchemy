@@ -5,12 +5,15 @@ from data_models import db, Author, Book
 from flask import Flask, request, render_template, redirect, url_for, flash
 from requests.exceptions import RequestException
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
+import openai
+from openai import OpenAIError
 from dotenv import load_dotenv
 
 load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')
+openai.api_key = os.getenv('OPENAI_API_KEY')
 
 # Get the absolute path to the current directory
 base_dir = os.path.abspath(os.path.dirname(__file__))
@@ -281,5 +284,51 @@ def rate_book(book_id):
     return redirect(url_for('book_details', book_id=book.id))
 
 
+@app.route("/suggest_book", methods=["GET", "POST"])
+def suggest_book():
+    """
+    Gets an AI suggestion for a book. openai used
+    :return:
+    """
+    if request.method == "POST":
+        # Retrieve all books from the database
+        books = Book.query.all()
+
+        # Optionally, if you implemented ratings, include them:
+        books_data = [
+            {
+                "title": book.title,
+                "author": book.author.name if book.author else "Unknown",
+                "rating": book.rating if book.rating else "No rating"
+            }
+            for book in books
+        ]
+
+        # AI API-prompt
+        user_message = "I have the following books in my library:\n"
+        for book in books_data:
+            user_message += f"- {book['title']} by {book['author']} (Rating: {book['rating']})\n"
+        user_message += "Based on these books, can you suggest a book I might enjoy?"
+
+        # Query openai for a suggestion
+        try:
+            response = openai.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": "You are a helpful assistant that recommends books."},
+                    {"role": "user", "content": user_message}
+                ],
+                max_tokens=150
+            )
+            # Fetch suggestion from response
+            suggestion = response["choices"][0]["message"]["content"].strip()
+        except OpenAIError as e:
+            suggestion = f"An error occurred: {str(e)}"
+
+        return render_template("suggest_book.html", suggestion=suggestion, books=books)
+
+    return render_template("suggest_book.html", suggestion=None)
+
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5001, debug=True)
+    app.run(host="0.0.0.0", port=5002, debug=True)

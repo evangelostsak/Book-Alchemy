@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Suggestion</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header>
+    <h1>Book Alchemy</h1>
+    <h3>Get a Book Suggestion</h3>
+  </header>
+          <!-- Navigation bar -->
+      <nav>
+      <ul class="navbar">
+        <li><a href="{{ url_for('home') }}">Home</a></li>
+        <li><a href="{{ url_for('add_author') }}">Add Author</a></li>
+        <li><a href="{{ url_for('add_book') }}">Add Book</a></li>
+        <li><a href="{{ url_for('suggest_book') }}">Suggest Book</a></li>
+        </ul>
+          </nav>
+  <main>
+    <section class="suggestion-form">
+      <form method="POST">
+        <button type="submit">Get Book Suggestion</button>
+      </form>
+    </section>
+
+    {% if suggestion %}
+      <section class="suggestion-result">
+        <h2>Suggested Book:</h2>
+        <p>{{ suggestion }}</p>
+      </section>
+    {% endif %}
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Book Alchemy</p>
+  </footer>
+</body>
+</html>
